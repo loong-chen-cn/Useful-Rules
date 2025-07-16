@@ -62,7 +62,7 @@ ipv6 = false
 prefer-ipv6 = false
 
 # 直连的域名类规则使用系统 DNS 进行查询。false 表示不启用。
-dns-direct-system = false
+dns-direct-system = true
 
 # ping 数据包自动回复。
 icmp-auto-reply = true
