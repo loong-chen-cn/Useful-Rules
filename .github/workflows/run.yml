@@ -26,11 +26,21 @@ jobs:
         run: |
           curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.list \
           | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > geosite_gfw.list
+
+      - name: Generate category-ai-chat-!cn.list file
+        run: |
+          curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-chat-!cn.list \
+          | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > geosite_gfw.list
           
-      # - name: Generate geosite_private.list file
-      #   run: |
-      #     curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.list \
-      #     | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > geosite_private.list
+      - name: Generate geosite_private.list file
+        run: |
+          curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.list \
+          | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > geosite_private.list
+
+      - name: Generate geolocation-cn.list file
+        run: |
+          curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-cn.list \
+          | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > geosite_cn.list
       
       - name: Generate geosite_cn.list file
         run: |
@@ -41,9 +51,9 @@ jobs:
         run: |
           curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.list | sed 's/^/IP-CIDR,/' > geoip_telegram.list
           
-      # - name: Generate geoip_private.list file
-      #   run: |
-      #     curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.list | sed 's/^/IP-CIDR,/' > geoip_private.list
+      - name: Generate geoip_private.list file
+        run: |
+          curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.list | sed 's/^/IP-CIDR,/' > geoip_private.list
       
       - name: Generate geoip_cn.list file
         run: |
@@ -79,13 +89,13 @@ jobs:
           sparse-checkout-cone-mode: false
           path: conf.d
 
-      - name: Generate skip proxy entries Generate Always Use Real IP Entries
-        run: |
-          sed -i "/^skip-proxy =/c\skip-proxy = $(curl -sSL \
-          https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/private.list | \
-          paste -sd,),$(curl -sSL \
-          https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/private.list | \
-          sed 's/+/\*/g' | paste -sd,)" ./conf.d/General.txt
+      # - name: Generate skip proxy entries Generate Always Use Real IP Entries
+      #   run: |
+      #     sed -i "/^skip-proxy =/c\skip-proxy = $(curl -sSL \
+      #     https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/private.list | \
+      #     paste -sd,),$(curl -sSL \
+      #     https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/private.list | \
+      #     sed 's/+/\*/g' | paste -sd,)" ./conf.d/General.txt
           
       # - name: Generate Tun Excluded Routes Entries
       #   run: |
@@ -93,29 +103,28 @@ jobs:
       #     https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/private.list | \
       #     paste -sd,)" ./conf.d/General.txt
       
-      - name: Generate Always Use Real IP Entries
-        run: |
-          sed -i "/^always-real-ip =/c\always-real-ip = $(curl -sSL \
-          https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/geolocation-cn.list | \
-          sed 's/+/\*/g' | paste -sd,)" ./conf.d/General.txt
+      # - name: Generate Always Use Real IP Entries
+      #   run: |
+      #     sed -i "/^always-real-ip =/c\always-real-ip = $(curl -sSL \
+      #     https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/geolocation-cn.list | \
+      #     sed 's/+/\*/g' | paste -sd,)" ./conf.d/General.txt
 
       - name: Generation of rules section
         run: |
           cat <<EOF >> ./conf.d/General.txt
-          [Rule]
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/geosite_private.list,DIRECT
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/geoip_private.list,DIRECT,no-resolve
           DOMAIN,8.8.8.8.in-addr.arpa,AUTO
-          DOMAIN,4.4.8.8.in-addr.arpa,AUTO
-          DOMAIN,5.5.5.223.in-addr.arpa,DIRECT
-          DOMAIN,6.6.6.223.in-addr.arpa,DIRECT
-          RULE-SET,https://raw.githubusercontent.com/loong-chen-88/Useful-Rules/refs/heads/release/rules/geosite_category-ads-all.list,REJECT
-          RULE-SET,https://raw.githubusercontent.com/loong-chen-88/Useful-Rules/refs/heads/release/rules/geosite_gfw.list,AUTO
-          RULE-SET,https://raw.githubusercontent.com/loong-chen-88/Useful-Rules/refs/heads/release/rules/geosite_cn.list,DIRECT
           IP-CIDR,8.8.8.8/32,AUTO,no-resolve
-          IP-CIDR,8.8.4.4/32,AUTO,no-resolve
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/geosite_category-ads-all.list,REJECT
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/geosite_gfw.list,AUTO
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/category-ai-chat-!cn.list,AUTO
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/geoip_telegram.list,AUTO,no-resolve
+          DOMAIN,5.5.5.223.in-addr.arpa,DIRECT
           IP-CIDR,223.5.5.5/32,DIRECT,no-resolve
-          IP-CIDR,223.6.6.6/32,DIRECT,no-resolve
-          RULE-SET,https://raw.githubusercontent.com/loong-chen-88/Useful-Rules/refs/heads/release/rules/geoip_telegram.list,AUTO,no-resolve
-          RULE-SET,https://raw.githubusercontent.com/loong-chen-88/Useful-Rules/refs/heads/release/rules/geoip_cn.list,DIRECT,no-resolve
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/geolocation-cn.list,DIRECT
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/geosite_cn.list,DIRECT
+          RULE-SET,https://raw.githubusercontent.com/loong-chen-cn/Useful-Rules/refs/heads/release/rules/geoip_cn.list,DIRECT,no-resolve
           FINAL,AUTO
           
           EOF
