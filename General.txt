@@ -217,6 +217,3 @@ AUTO = url-test,interval=600,timeout=5,url=https://cp.cloudflare.com/generate_20
 
 # 关于屏蔽443端口的UDP流量的解释内容：HTTP3/QUIC协议开始流行，但是国内ISP和国际出口的UDP优先级都很低，表现很差，屏蔽掉以强制回退HTTP2/HTTP1.1。（如需启用该逻辑规则，请删除AND前面的注释符号#）
 # AND,((PROTOCOL,UDP),(DST-PORT,443)),REJECT-NO-DROP
-
-
-
