@@ -50,10 +50,10 @@ tun-excluded-routes = 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 17
 # 2、ecs=子网范围。ecs 参数用于设置 EDNS Client Subnet (ECS)，向 DNS 服务器传递客户端的子网信息。ECS 允许 DNS 服务器根据指定的子网范围（而非实际客户端 IP）来返回最优结果。
 # 3、ecs-override=true。ecs 参数的强制覆盖。即使客户端的实际 IP 提供了不同的地理位置，查询会强制使用 ecs 指定的子网范围。
 
-dns-server = https://8.8.8.8/dns-query#proxy=AUTO&ecs=1.1.1.1/24&ecs-override=true
+dns-server = h3://8.8.8.8/dns-query#proxy=AUTO&ecs=8.8.8.0/24&ecs-override=true
 
 # 备用 DNS。当覆写 DNS 查询失败或查询时间超过 2 秒，Shadowrocket 会自动回退备用 DNS。如需指定多个 DNS，可用逗号分隔。system 表示回退到系统 DNS。
-fallback-dns-server = https://223.5.5.5/dns-query#ecs=114.114.114.114/24&ecs-override=true
+fallback-dns-server = https://8.8.8.8/dns-query#proxy=AUTO&no-h3&ecs=8.8.8.0/24&ecs-override=true
 
 # 启用 IPv6 支持。false 表示不启用，true 表示启用。启用会同时查询 A 记录和 AAAA 记录，优先使用 IPv4 地址解析。
 ipv6 = false
@@ -80,7 +80,7 @@ dns-direct-fallback-proxy = true
 # tun-included-routes =
 
 # 总是真实 IP。此选项要求 Shadowrocket 在 TUN 处理 DNS 请求时返回一个真实的 IP 地址而不是假的 IP 地址。
-# always-real-ip =
+always-real-ip = *
 
 # DNS 劫持。有些设备或软件总是使用硬编码的 DNS 服务器，例如 Netflix 通过 Google DNS(8.8.8.8或8.8.4.4)发送请求，您可以使用此选项来劫持查询。
 hijack-dns = :53
