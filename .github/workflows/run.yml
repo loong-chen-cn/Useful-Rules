@@ -30,7 +30,7 @@ jobs:
       - name: Generate category-ai-chat-!cn.list file
         run: |
           curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-chat-!cn.list \
-          | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > geosite_gfw.list
+          | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > category-ai-chat-!cn.list
           
       - name: Generate geosite_private.list file
         run: |
@@ -45,7 +45,7 @@ jobs:
       - name: Generate geosite_cn.list file
         run: |
           curl -sSL https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.list \
-          | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > geosite_cn.list
+          | sed -E 's/^\+\./DOMAIN-SUFFIX,/; s/^[^D]/DOMAIN-SUFFIX,&/' > geolocation-cn.list
           
       - name: Generate geoip_telegram.list file
         run: |
